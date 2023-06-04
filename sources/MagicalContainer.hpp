@@ -14,7 +14,7 @@ namespace ariel {
         ~MagicalContainer();
         void addElement(int newElement);
         void removeElement(int toDelete);
-        int size() const { return elements.size() };
+        int size() const { return elements.size(); }
         vector<int> getElements();
         MagicalContainer& operator=(const MagicalContainer& otherContainer);
 
@@ -24,8 +24,15 @@ namespace ariel {
                 size_t index;
 
             public:
-            AscendingIterator(MagicalContainer& container, size_t index): container(container),index(index){}
-
+            explicit AscendingIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+            bool operator==(const AscendingIterator& other) const;
+            bool operator!=(const AscendingIterator& other) const;
+            bool operator>(const AscendingIterator& other) const;
+            bool operator<(const AscendingIterator& other) const;
+            int operator*() const;
+            AscendingIterator& operator++(int num) const;
+            int* begin() const;
+            int* end() const;
         };
 
         class SideCrossIterator{
@@ -34,8 +41,15 @@ namespace ariel {
                 size_t index;
 
             public:
-                SideCrossIterator(MagicalContainer& container, size_t index): container(container),index(index){}
-                bool operator==(const MagicalContainer& other)
+                explicit SideCrossIterator(MagicalContainer& container, size_t index): container(container),index(index){}
+                bool operator==(const SideCrossIterator &other) const;
+                bool operator!=(const SideCrossIterator& other) const;
+                bool operator>(const SideCrossIterator& other) const;
+                bool operator<(const SideCrossIterator& other) const;
+                int operator*() const;
+                MagicalContainer::SideCrossIterator& operator++(int num) const;
+                int* begin() const;
+                int* end() const;
         };
 
         class PrimeIterator{
@@ -44,9 +58,16 @@ namespace ariel {
                 size_t index;
 
             public:
-            PrimeIterator(MagicalContainer& container, size_t index): container(container),index(index){}
+                explicit PrimeIterator(MagicalContainer& container, size_t index): container(container),index(index){}
+                bool operator==(const PrimeIterator &other) const;
+                bool operator!=(const PrimeIterator& other) const;
+                bool operator>(const PrimeIterator& other) const;
+                bool operator<(const PrimeIterator& other) const;
+                int operator*() const;
+                MagicalContainer::PrimeIterator& operator++(int num) const;
+                int* begin() const;
+                int* end() const;
         };
-
     };
 }
 
