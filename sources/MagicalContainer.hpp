@@ -25,14 +25,15 @@ namespace ariel {
 
             public:
             explicit AscendingIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+            ~AscendingIterator() = default;
             bool operator==(const AscendingIterator& other) const;
             bool operator!=(const AscendingIterator& other) const;
             bool operator>(const AscendingIterator& other) const;
             bool operator<(const AscendingIterator& other) const;
             int operator*() const;
-            AscendingIterator& operator++(int num) const;
-            int* begin() const;
-            int* end() const;
+            AscendingIterator& operator++() const;
+            MagicalContainer::AscendingIterator begin() const;
+            MagicalContainer::AscendingIterator end() const;
         };
 
         class SideCrossIterator{
@@ -42,14 +43,15 @@ namespace ariel {
 
             public:
                 explicit SideCrossIterator(MagicalContainer& container, size_t index): container(container),index(index){}
+                ~SideCrossIterator() = default;
                 bool operator==(const SideCrossIterator &other) const;
                 bool operator!=(const SideCrossIterator& other) const;
                 bool operator>(const SideCrossIterator& other) const;
                 bool operator<(const SideCrossIterator& other) const;
                 int operator*() const;
-                MagicalContainer::SideCrossIterator& operator++(int num) const;
-                int* begin() const;
-                int* end() const;
+                SideCrossIterator& operator++() const;
+                MagicalContainer::SideCrossIterator begin() const;
+                MagicalContainer::SideCrossIterator end() const;
         };
 
         class PrimeIterator{
@@ -59,14 +61,15 @@ namespace ariel {
 
             public:
                 explicit PrimeIterator(MagicalContainer& container, size_t index): container(container),index(index){}
+                ~PrimeIterator() = default;
                 bool operator==(const PrimeIterator &other) const;
                 bool operator!=(const PrimeIterator& other) const;
                 bool operator>(const PrimeIterator& other) const;
                 bool operator<(const PrimeIterator& other) const;
                 int operator*() const;
-                MagicalContainer::PrimeIterator& operator++(int num) const;
-                int* begin() const;
-                int* end() const;
+                PrimeIterator& operator++() const;
+                MagicalContainer::PrimeIterator begin() const;
+                MagicalContainer::PrimeIterator end() const;
         };
     };
 }
