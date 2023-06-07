@@ -19,12 +19,16 @@ namespace ariel {
 
         class AscendingIterator{
             private:
-                MagicalContainer& container;
-                size_t index;
+                MagicalContainer& container;  // Pointer to the MagicalContainer object
+                size_t index;  // The Current position in the container
 
             public:
+            // Constructors
             AscendingIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+            AscendingIterator(const AscendingIterator& other); // Copy constructor
             ~AscendingIterator() = default;
+
+            // --------------operators----------------
             MagicalContainer::AscendingIterator& operator=(const AscendingIterator& other);
             bool operator==(const AscendingIterator& other) const;
             bool operator!=(const AscendingIterator& other) const;
@@ -42,8 +46,12 @@ namespace ariel {
                 size_t index;
 
             public:
+                // Constructors
                 SideCrossIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                SideCrossIterator(const SideCrossIterator& other); // Copy constructor
                 ~SideCrossIterator() = default;
+
+                // --------------operators----------------
                 MagicalContainer::SideCrossIterator& operator=(const SideCrossIterator& other);
                 bool operator==(const SideCrossIterator &other) const;
                 bool operator!=(const SideCrossIterator& other) const;
@@ -61,9 +69,13 @@ namespace ariel {
                 size_t index;
 
             public:
+                // Constructors
                 PrimeIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                PrimeIterator(const PrimeIterator& other); // Copy constructor
                 ~PrimeIterator() = default;
-                MagicalContainer::PrimeIterator& operator=(const PrimeIterator& other);
+
+                // --------------operators----------------
+                PrimeIterator& operator=(const PrimeIterator& other);
                 bool operator==(const PrimeIterator &other) const;
                 bool operator!=(const PrimeIterator& other) const;
                 bool operator>(const PrimeIterator& other) const;

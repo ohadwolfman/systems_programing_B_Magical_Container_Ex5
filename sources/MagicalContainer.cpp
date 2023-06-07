@@ -39,7 +39,12 @@ namespace ariel{
 
 // ---------------------- Class: AscendingIterator ----------------------
     MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const AscendingIterator& other){
-        return *this; }
+        if (this != &other){
+            container = other.container;
+            index = other.index;
+        }
+        return *this;
+    }
     bool MagicalContainer::AscendingIterator::operator==(const AscendingIterator &other) const{
         return this->index==other.index; }
     bool MagicalContainer::AscendingIterator::operator!=(const AscendingIterator& other) const{
@@ -64,7 +69,12 @@ namespace ariel{
 
 // ---------------------- Class: SideCrossIterator ----------------------
     MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator& other){
-        return *this; }
+        if (this != &other){
+            container = other.container;
+            index = other.index;
+        }
+        return *this;
+    }
     bool MagicalContainer::SideCrossIterator::operator==(const SideCrossIterator &other) const{
         return this->index==other.index; }
     bool MagicalContainer::SideCrossIterator::operator!=(const SideCrossIterator& other) const{
@@ -89,7 +99,12 @@ namespace ariel{
 
     // ---------------------- Class: PrimeIterator ----------------------
     MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(const PrimeIterator& other){
-        return *this; }
+        if (this != &other){
+            container = other.container;
+            index = other.index;
+        }
+        return *this;
+    }
     bool MagicalContainer::PrimeIterator::operator==(const MagicalContainer::PrimeIterator &other) const {
         return false; }
     bool MagicalContainer::PrimeIterator::operator!=(const PrimeIterator& other) const{
