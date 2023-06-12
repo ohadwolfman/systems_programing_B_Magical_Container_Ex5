@@ -14,8 +14,10 @@ namespace ariel {
         ~MagicalContainer();
         void addElement(int newElement);
         void removeElement(int toDelete);
-        int size() const { return elements.size(); }
+        int size() const { return elements.capacity(); }
+        int getElement(size_t index);
         vector<int> getElements();
+
 
         class AscendingIterator{
             private:
@@ -25,19 +27,19 @@ namespace ariel {
             public:
             // Constructors
             AscendingIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
-            AscendingIterator(const AscendingIterator& other); // Copy constructor
+            AscendingIterator (const AscendingIterator& other) : container(other.container), index(other.index) {}
             ~AscendingIterator() = default;
 
             // --------------operators----------------
-            MagicalContainer::AscendingIterator& operator=(const AscendingIterator& other);
+            AscendingIterator& operator=(const AscendingIterator& other);
             bool operator==(const AscendingIterator& other) const;
             bool operator!=(const AscendingIterator& other) const;
             bool operator>(const AscendingIterator& other) const;
             bool operator<(const AscendingIterator& other) const;
             int operator*() const;
             AscendingIterator& operator++();
-            MagicalContainer::AscendingIterator begin() const;
-            MagicalContainer::AscendingIterator end() const;
+            AscendingIterator begin() const;
+            AscendingIterator end() const;
         };
 
         class SideCrossIterator{

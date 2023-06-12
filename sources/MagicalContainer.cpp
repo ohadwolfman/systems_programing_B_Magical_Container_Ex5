@@ -32,6 +32,10 @@ namespace ariel{
         }
     }
 
+    int MagicalContainer::getElement(size_t index){
+        return this->elements.at(index);
+    }
+
     vector<int> MagicalContainer::getElements(){
         return this->elements;
     }
