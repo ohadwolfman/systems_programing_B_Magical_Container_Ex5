@@ -17,7 +17,7 @@ namespace ariel {
         void removeElement(int toDelete);
         int size() const { return elements.size(); }
         int AT(size_t index);
-        vector<int> getElements();
+        vector<int>& getElements();
         static bool isPrime(int num);
 
 

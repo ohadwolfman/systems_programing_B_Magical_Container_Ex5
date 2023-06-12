@@ -40,7 +40,7 @@ namespace ariel{
         return this->elements.at(index);
     }
 
-    vector<int> MagicalContainer::getElements(){
+    vector<int>& MagicalContainer::getElements(){
         return this->elements;
     }
 
