@@ -76,7 +76,7 @@ namespace ariel{
         return this->index < other.index;
     }
     int MagicalContainer::AscendingIterator::operator*() const{
-        return 1;
+        return this->container.elements.at(index);
     }
     MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator++(){
         if (index == container.size() || *this == end()) {
@@ -118,7 +118,7 @@ namespace ariel{
         return this->index < other.index;
     }
     int MagicalContainer::SideCrossIterator::operator*() const{
-        return 1;
+        return this->container.elements.at(index);
     }
     MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++(){
         if (index == container.size() || *this == end()) {
@@ -159,7 +159,7 @@ namespace ariel{
         return this->index < other.index;
     }
     int MagicalContainer::PrimeIterator::operator*() const{
-        return 0;
+        return this->container.elements.at(index);
     }
     MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++(){
         if (index == container.size() || *this == end()) {
