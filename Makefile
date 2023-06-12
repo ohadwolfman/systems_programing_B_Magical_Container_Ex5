@@ -1,40 +1,42 @@
-#!make -f
+#!/bin/bash
 
-CXX=clang++-14
-CXXVERSION=c++2a
-SOURCE_PATH=sources
-OBJECT_PATH=objects
-CXXFLAGS=-std=$(CXXVERSION) -Werror -Wsign-conversion -I$(SOURCE_PATH)
-TIDY_FLAGS=-extra-arg=-std=$(CXXVERSION) -checks=bugprone-*,clang-analyzer-*,cppcoreguidelines-*,performance-*,portability-*,readability-*,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-owning-memory --warnings-as-errors=*
-VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
+source grade_utils
+TIMEOUT=20
+run_in_folder_if_exists "$1"
 
-SOURCES=$(wildcard $(SOURCE_PATH)/*.cpp)
-HEADERS=$(wildcard $(SOURCE_PATH)/*.hpp)
-OBJECTS=$(subst sources/,objects/,$(subst .cpp,.o,$(SOURCES)))
+printf "\n\n### Cleaning old files ###\n"
+make -f Makefile clean
 
-run: demo
-	./$^
+total=0
+i=0
 
-demo: Demo.o $(OBJECTS) 
-	$(CXX) $(CXXFLAGS) $^ -o $@
+let "i=i+1"
+printf "\n\n### Check $i: our demo program should compile with your class\n"
+grade_command make -j8 -f Makefile demo
+printf "### Score $i: $grade\n"
+total=$((total + grade))
 
-test: TestCounter.o Test.o $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+let "i=i+1"
+printf "\n\n### Check $i: our demo program should run without errors\n"
+grade_command ./demo
+printf "### Score $i: $grade\n"
+total=$((total + grade))
 
-tidy:
-	clang-tidy $(HEADERS) $(TIDY_FLAGS) --
+let "i=i+1"
+printf "\n\n### Check $i: your test should compile \n"
+grade_command make -j8 -f Makefile test
+printf "### Score $i: $grade\n"
+total=$((total + grade))
 
-valgrind: demo test
-	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./demo 2>&1 | { egrep "lost| at " || true; }
-	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./test 2>&1 | { egrep "lost| at " || true; }
+let "i=i+1"
+printf "\n\n### Check $i: you should write some new tests\n"
+grade_command ./test
+printf "### Score $i: $grade\n"
+total=$((total + grade))
 
-%.o: %.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) --compile $< -o $@
+total=$((total / i))
+printf "\n\nGrade: $total\n\n"
 
-$(OBJECT_PATH)/%.o: $(SOURCE_PATH)/%.cpp $(HEADERS)
-	$(CXX) $(CXXFLAGS) --compile $< -o $@
+make -f Makefile --silent clean
 
-clean:
-	rm -f $(OBJECTS) *.o test* demo*
-	rm -f StudentTest*.cpp
-
+exit $total

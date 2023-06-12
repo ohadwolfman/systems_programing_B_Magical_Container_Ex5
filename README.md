@@ -66,11 +66,18 @@ To simplify the implementation, we will ignore the case where an iterator points
 </div>
 
 מומלץ גם להריץ:
-
 <div dir='ltr'>
 
     make tidy
     make valgrind
+
+</div>
+
+**חלק ב**: יש לבצע מימוש מלא ולהריץ:
+
+<div dir='ltr'>
+
+    bash geade
 
 </div>
 
