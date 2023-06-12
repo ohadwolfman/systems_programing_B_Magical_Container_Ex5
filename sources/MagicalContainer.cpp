@@ -1,43 +1,75 @@
 #include "MagicalContainer.hpp"
 #include <iterator>
-#include <math.h>
+#include <cmath>
+#include <algorithm>
 
 using namespace std;
 
 namespace ariel{
     MagicalContainer::MagicalContainer(){
-
+        elements = vector<int>();
+        primeElements = vector<int*>();
+        sideCrossElements = vector<int*>();
     }
-    MagicalContainer::MagicalContainer(const MagicalContainer& other){
-        this->elements=other.elements;
-    }
+//    MagicalContainer::MagicalContainer(const MagicalContainer& other){
+//        elements = other.elements;
+//        primeElements = other.primeElements;
+//        sideCrossElements = other.sideCrossElements;
+//    }
     MagicalContainer::~MagicalContainer() {
-
-    }
-
-
-    void MagicalContainer::addElement(int newElement){
-        for(int element: elements){
-            if(newElement == element)
-                return;
+        for (int* ptr : primeElements) {
+            delete ptr;
         }
-        elements.push_back(newElement);
-        if (isPrime(newElement))
-            prime_container.push_back(&newElement);
+        primeElements.clear(); // Clear the vector after deleting the pointers
+
+        // There is no need to delete elements in sideCrossElements since they are not dynamically allocated
+        sideCrossElements.clear(); // Clear the vector
     }
+
+    void MagicalContainer::addElement(int newElement) {
+        if (std::binary_search(elements.begin(), elements.end(), newElement))
+            return;
+
+        auto insertionPoint = std::lower_bound(elements.begin(), elements.end(), newElement);
+        elements.insert(insertionPoint, newElement);
+
+        if (isPrime(newElement)) {
+            size_t idx = 0;
+            while (idx < primeElements.size() && newElement > *primeElements.at(idx)){
+                idx++;
+            }
+            auto insertionPointPrime = primeElements.begin() + static_cast<long>(idx);
+            primeElements.insert(insertionPointPrime, new int(newElement));
+        }
+
+        // clear the vector because every addition the container changes.
+        sideCrossElements.clear();
+        // building the crossOrder by taking one from the beginning and one from the end.
+        size_t start = 0, end = elements.size() - 1;
+        for (size_t i = 0; i < elements.size() - 1; i += 2) {
+            sideCrossElements.push_back(&(elements[start]));
+            sideCrossElements.push_back(&(elements[end]));
+            ++start;
+            --end;
+        }
+    }
+
+
+
+
 
     void MagicalContainer::removeElement(int toDelete){
+        bool flag = false;
         auto itr = elements.begin();
         for(int element: elements){
             if(toDelete == element){
                 elements.erase(itr);
+                flag = true;
             }
             ++itr;
         }
-    }
-
-    int MagicalContainer::AT(size_t index){
-        return this->elements.at(index);
+        if(!flag)
+            throw runtime_error("The element isn't exist in the container");
     }
 
     vector<int>& MagicalContainer::getElements(){

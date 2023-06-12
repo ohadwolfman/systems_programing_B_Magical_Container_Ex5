@@ -6,8 +6,9 @@ using namespace std;
 namespace ariel {
     class MagicalContainer {
     private:
-        vector<int>elements;
-        vector<int *> prime_container;
+        vector<int>elements;  // The elements will be inserted sorted s.t the ascending iterator will iterate directly
+        vector<int*> primeElements;
+        vector<int*> sideCrossElements;
 
     public:
         MagicalContainer();
@@ -16,7 +17,6 @@ namespace ariel {
         void addElement(int newElement);
         void removeElement(int toDelete);
         int size() const { return elements.size(); }
-        int AT(size_t index);
         vector<int>& getElements();
         static bool isPrime(int num);
 
