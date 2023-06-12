@@ -17,7 +17,7 @@ int main() {
     std::cout << "Elements in ascending order:\n";
     MagicalContainer::AscendingIterator ascIter(container);
     for (auto it = ascIter.begin(); it != ascIter.end(); ++it) {
-        //std::cout << *it << ' ';   // 2 3 9 17 25
+        std::cout << *it << ' ';   // 2 3 9 17 25
     }
     std::cout << std::endl;
 
@@ -25,7 +25,7 @@ int main() {
     std::cout << "Elements in cross order:\n";
     MagicalContainer::SideCrossIterator crossIter(container);
     for (auto it = crossIter.begin(); it != crossIter.end(); ++it) {
-        //std::cout << *it << ' ';  // 2 25 3 17 9
+        std::cout << *it << ' ';  // 2 25 3 17 9
     }
     std::cout << std::endl;
 
@@ -33,7 +33,7 @@ int main() {
     std::cout << "Prime numbers:\n";
     MagicalContainer::PrimeIterator primeIter(container);
     for (auto it = primeIter.begin(); it != primeIter.end(); ++it) {
-        //std::cout << *it << ' ';  // 2 3 17
+        std::cout << *it << ' ';  // 2 3 17
     }
     std::cout << std::endl;
 

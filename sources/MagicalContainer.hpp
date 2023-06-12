@@ -7,6 +7,7 @@ namespace ariel {
     class MagicalContainer {
     private:
         vector<int>elements;
+        vector<int *> prime_container;
 
     public:
         MagicalContainer();
@@ -14,9 +15,10 @@ namespace ariel {
         ~MagicalContainer();
         void addElement(int newElement);
         void removeElement(int toDelete);
-        int size() const { return elements.capacity(); }
-        int getElement(size_t index);
+        int size() const { return elements.size(); }
+        int AT(size_t index);
         vector<int> getElements();
+        static bool isPrime(int num);
 
 
         class AscendingIterator{
