@@ -27,21 +27,21 @@ namespace ariel{
     }
 
     void MagicalContainer::addElement(int newElement) {
+        // Insert in the sorted place in the vector for ascending iterator
         if (std::binary_search(elements.begin(), elements.end(), newElement))
             return;
 
         auto insertionPoint = std::lower_bound(elements.begin(), elements.end(), newElement);
         elements.insert(insertionPoint, newElement);
 
+        // Insert if prime number for prime iterator
         if (isPrime(newElement)) {
-            size_t idx = 0;
-            while (idx < primeElements.size() && newElement > *primeElements.at(idx)){
-                idx++;
-            }
-            auto insertionPointPrime = primeElements.begin() + static_cast<long>(idx);
-            primeElements.insert(insertionPointPrime, new int(newElement));
+            int* newElementPtr = new int(newElement);
+            primeElements.push_back(newElementPtr);
+            std::sort(primeElements.begin(), primeElements.end(), pointersCompare);
         }
 
+        // Insert to cross order pointers vector for crossOrder iterator
         // clear the vector because every addition the container changes.
         sideCrossElements.clear();
         // building the crossOrder by taking one from the beginning and one from the end.
@@ -53,10 +53,6 @@ namespace ariel{
             --end;
         }
     }
-
-
-
-
 
     void MagicalContainer::removeElement(int toDelete){
         bool flag = false;
@@ -75,12 +71,16 @@ namespace ariel{
     vector<int>& MagicalContainer::getElements(){
         return this->elements;
     }
+    bool MagicalContainer::pointersCompare(int* a, int* b) {
+        return *a < *b;
+    }
 
-    bool MagicalContainer::isPrime(int num){
-        if(num<2)
+
+    bool MagicalContainer::isPrime(int number) {
+        if (number < 2)
             return false;
-        for(int i=2; i<= sqrt(num); ++i){
-            if(num % i == 0)
+        for (int i = 2; i * i <= number; ++i) {
+            if (number % i == 0)
                 return false;
         }
         return true;

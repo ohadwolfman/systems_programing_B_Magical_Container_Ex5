@@ -19,6 +19,7 @@ namespace ariel {
         int size() const { return elements.size(); }
         vector<int>& getElements();
         static bool isPrime(int num);
+        static bool pointersCompare(int* a, int* b);
 
 
         class AscendingIterator{
