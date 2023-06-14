@@ -4,26 +4,42 @@
 using namespace std;
 
 namespace ariel {
+    class Node {
+    public:
+        int value;
+        Node* next;
+        Node* prev;
+
+        explicit Node(int val) : value(val), next(nullptr), prev(nullptr) {}
+        ~Node() = default;
+    };
+    class LinkedList {
+    public:
+        Node* head;
+        Node* tail;
+        explicit LinkedList(Node* n) : head(n), tail(nullptr) {}
+        ~LinkedList() = default;
+    };
+
     class MagicalContainer {
     private:
-        vector<int>elements;  // The elements will be inserted sorted s.t the ascending iterator will iterate directly
-        vector<int*> primeElements;
-        vector<int*> sideCrossElements;
+        LinkedList elements; // The elements will be inserted sorted s.t the ascending iterator will iterate directly
+        std::vector<Node*> primeElements;
+        std::vector<Node*> sideCrossElements;
+        int size;
 
     public:
-        MagicalContainer();
-        MagicalContainer(const MagicalContainer& other);
-        ~MagicalContainer();
+        MagicalContainer(): elements(nullptr),size(0){}
+//        MagicalContainer(const MagicalContainer& other);
+        ~MagicalContainer() = default;
         void addElement(int newElement);
-        void removeElement(int toDelete);
-        void addPrime(int newElement);
-        void updateSideCross(int newElement);
-        int size() const { return elements.size(); }
-        vector<int>& getElements();
-        static bool isPrime(int num);
-        static bool pointersCompare(const int* a, const int* b);
+        void removeElement(int toDelete) const;
+        static bool isPrime(Node newNode);
+        void addPrime(Node& newNode);
+        void updateSideCross();
+        static bool pointersCompare(const Node* a, const Node* b);
 
-
+        // ---------------------- Class: AscendingIterator ----------------------
         class AscendingIterator{
             private:
                 MagicalContainer& container;  // Pointer to the MagicalContainer object
@@ -42,11 +58,14 @@ namespace ariel {
             bool operator>(const AscendingIterator& other) const;
             bool operator<(const AscendingIterator& other) const;
             int operator*() const;
+            Node* operator[](size_t ind) const;
             AscendingIterator& operator++();
             AscendingIterator begin() const;
             AscendingIterator end() const;
         };
 
+
+        // ---------------------- Class: SideCrossIterator ----------------------
         class SideCrossIterator{
             private:
                 MagicalContainer& container;
@@ -54,7 +73,7 @@ namespace ariel {
 
             public:
                 // Constructors
-                explicit SideCrossIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                SideCrossIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
                 SideCrossIterator(const SideCrossIterator& other) = default;
                 ~SideCrossIterator() = default;
 
@@ -65,11 +84,14 @@ namespace ariel {
                 bool operator>(const SideCrossIterator& other) const;
                 bool operator<(const SideCrossIterator& other) const;
                 int operator*() const;
+                Node* operator[](size_t index) const;
                 SideCrossIterator& operator++();
                 SideCrossIterator begin() const;
                 SideCrossIterator end() const;
         };
 
+
+        // ---------------------- Class: PrimeIterator ----------------------
         class PrimeIterator{
             private:
                 MagicalContainer& container;
@@ -77,7 +99,7 @@ namespace ariel {
 
             public:
                 // Constructors
-                explicit PrimeIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                PrimeIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
                 PrimeIterator(const PrimeIterator& other) = default;
                 ~PrimeIterator() = default;
 
@@ -88,6 +110,7 @@ namespace ariel {
                 bool operator>(const PrimeIterator& other) const;
                 bool operator<(const PrimeIterator& other) const;
                 int operator*() const;
+                Node* operator[](size_t index) const;
                 PrimeIterator& operator++();
                 PrimeIterator begin() const;
                 PrimeIterator end() const;
