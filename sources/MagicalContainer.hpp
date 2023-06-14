@@ -35,11 +35,10 @@ namespace ariel {
         ~MagicalContainer() = default;
         void addElement(int newElement);
         void removeElement(int toDelete);
-        static bool isPrime(Node newNode);
-        void addPrime(Node& newNode);
+        static bool isPrime(int num);
+        void addPrime(Node newNode);
         void updateSideCross();
         int size() const{ return this->contSize; }
-        static bool pointersCompare(const Node* a, const Node* b);
 
         // ---------------------- Class: AscendingIterator ----------------------
         class AscendingIterator{
@@ -74,7 +73,7 @@ namespace ariel {
 
             public:
                 // Constructors
-                SideCrossIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                explicit SideCrossIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
                 SideCrossIterator(const SideCrossIterator& other) = default;
                 ~SideCrossIterator() = default;
 
@@ -100,7 +99,7 @@ namespace ariel {
 
             public:
                 // Constructors
-                PrimeIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                explicit PrimeIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
                 PrimeIterator(const PrimeIterator& other) = default;
                 ~PrimeIterator() = default;
 

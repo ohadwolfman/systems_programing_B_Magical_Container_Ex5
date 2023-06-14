@@ -26,52 +26,57 @@ namespace ariel{
     void MagicalContainer::addElement(int newElement) {
         // Create a new node for the new element
         Node* newNode = new Node(newElement);
-
+        Node* curr = elements.head;
         // Insert in the sorted place in the vector for ascending iterator
+
+        // if elements size is 0
         if (elements.head == nullptr) {
             elements.head = newNode;
-            ++this->contSize;
-            return;
+            elements.tail=newNode;
+            ++contSize;
         }
-
-        Node* curr = elements.head;
-        if (curr->next == nullptr) {
-            if (pointersCompare(elements.head, newNode)) {
+        // if elements size is 1
+        else if (curr->next == nullptr) {
+            if (elements.head->value < newNode->value) {
                 elements.head->next = newNode;
+                elements.tail=newNode;
                 newNode->prev = elements.head;
             } else {
                 newNode->next = elements.head;
+                elements.tail=elements.head;
                 elements.head->prev=newNode;
                 elements.head = newNode;
             }
-            ++this->contSize;
+            ++contSize;
             return;
         }
-
-        // if the element is already in the container - it won't be inserted
-        while(curr->next != nullptr && curr->next->value <= newNode->value){
-            if(curr->next->value == newNode->value)
-                return;
-            curr = curr->next;
-
-        }
-        if(curr->value < newNode->value){
-            if(curr->next == nullptr){
-                curr->next=newNode;
-                newNode->prev=curr;
-                this->elements.tail=newNode;
+        else{ // if the container's size is 2 or more
+            // if the element is already in the container - it won't be inserted
+            while(curr->next != nullptr && curr->next->value <= newNode->value){
+                if(curr->next->value == newNode->value)
+                    return;
+                curr = curr->next;
             }
-            else{
-                newNode->next=curr->next;
-                curr->next->prev=newNode;
-                newNode->prev=curr;
-                curr->next=newNode;
+            if(curr->value < newNode->value){
+                if(curr->next == nullptr){
+                    curr->next=newNode;
+                    elements.tail=newNode;
+                    newNode->prev=curr;
+                    this->elements.tail=newNode;
+                }
+                else{
+                    newNode->next=curr->next;
+                    curr->next->prev=newNode;
+                    newNode->prev=curr;
+                    curr->next=newNode;
+                }
             }
+            ++contSize;
         }
-        ++contSize;
 
         // Insert if prime number for prime iterator
-        if (isPrime(*newNode)) {
+        if (isPrime(newElement)) {
+            std::cout<<newNode->value<<"is prime!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
             addPrime((Node &) newNode);
         }
 
@@ -84,34 +89,48 @@ namespace ariel{
 //        std::cout<<sideCrossElements.size()<<endl;
     }
 
-    void MagicalContainer::removeElement(int toDelete){
+    void MagicalContainer::removeElement(int toDelete) {
         bool flag = false;
         Node* curr = elements.head;
-        for(int i = 0; i<this->size(); ++i){
-            if(toDelete == curr->value){
-                curr->prev->next = curr->next;
-                curr->next->prev = curr->prev;
-                flag = true;
+        while (curr != nullptr) {
+            Node* nextNode = curr->next;  // Store the next node
+            if (curr->value == toDelete) {
+                if (curr == elements.head) {
+                    elements.head = curr->next;
+                }
+                if (curr == elements.tail) {
+                    elements.tail = curr->prev;
+                }
+                if (curr->prev != nullptr) {
+                    curr->prev->next = curr->next;
+                }
+                if (curr->next != nullptr) {
+                    curr->next->prev = curr->prev;
+                }
                 delete curr;
                 --contSize;
-                break;
+                flag = true;
             }
+            curr = nextNode;  // Move to the next node
         }
-        if(!flag)
-            throw runtime_error("The element isn't exist in the container");
+        if (!flag) {
+            throw std::runtime_error("The element does not exist in the container");
+        }
     }
 
-    bool MagicalContainer::isPrime(Node newNode) {
-        if (newNode.value < 2)
+
+
+    bool MagicalContainer::isPrime(int num) {
+        if (num < 2)
             return false;
-        for (int i = 2; i * i <= newNode.value; ++i) {
-            if (newNode.value % i == 0)
+        for (int i = 2; i <= num; ++i) {
+            if (num % i == 0)
                 return false;
         }
         return true;
     }
 
-    void MagicalContainer::addPrime(Node& newNode){
+    void MagicalContainer::addPrime(Node newNode){
         // Find the correct position to insert the prime node in ascending order
         if(primeElements.empty()){
             primeElements.push_back(&newNode);
@@ -141,10 +160,6 @@ namespace ariel{
             start = start->next;
             end = end->prev;
         }
-    }
-
-    bool MagicalContainer::pointersCompare(const Node* a, const Node* b) {
-        return a->value > b->value;
     }
 
 
