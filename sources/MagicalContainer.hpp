@@ -19,6 +19,7 @@ namespace ariel {
         Node* tail;
         explicit LinkedList(Node* n) : head(n), tail(nullptr) {}
         ~LinkedList() = default;
+        Node* operator[](size_t ind) const;
     };
 
     class MagicalContainer {
@@ -26,17 +27,18 @@ namespace ariel {
         LinkedList elements; // The elements will be inserted sorted s.t the ascending iterator will iterate directly
         std::vector<Node*> primeElements;
         std::vector<Node*> sideCrossElements;
-        int size;
+        int contSize;
 
     public:
-        MagicalContainer(): elements(nullptr),size(0){}
+        MagicalContainer(): elements(nullptr),contSize(0){}
 //        MagicalContainer(const MagicalContainer& other);
         ~MagicalContainer() = default;
         void addElement(int newElement);
-        void removeElement(int toDelete) const;
+        void removeElement(int toDelete);
         static bool isPrime(Node newNode);
         void addPrime(Node& newNode);
         void updateSideCross();
+        int size() const{ return this->contSize; }
         static bool pointersCompare(const Node* a, const Node* b);
 
         // ---------------------- Class: AscendingIterator ----------------------
@@ -58,7 +60,6 @@ namespace ariel {
             bool operator>(const AscendingIterator& other) const;
             bool operator<(const AscendingIterator& other) const;
             int operator*() const;
-            Node* operator[](size_t ind) const;
             AscendingIterator& operator++();
             AscendingIterator begin() const;
             AscendingIterator end() const;

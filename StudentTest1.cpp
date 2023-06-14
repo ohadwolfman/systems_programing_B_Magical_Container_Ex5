@@ -1,6 +1,7 @@
 #include "doctest.h"
 #include "sources/MagicalContainer.hpp"
 #include <stdexcept>
+#include <iostream>
 
 using namespace ariel;
 using namespace std;
