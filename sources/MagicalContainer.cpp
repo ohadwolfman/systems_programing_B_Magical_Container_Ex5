@@ -9,7 +9,7 @@ using namespace std;
 namespace ariel{
 //    MagicalContainer::MagicalContainer(const MagicalContainer& other){
 //        contSize=other.contSize;
-//        elements = other.elements;
+//        elements = *new LinkedList(other.elements);
 //        primeElements = other.primeElements;
 //        sideCrossElements = other.sideCrossElements;
 //    }
@@ -43,11 +43,10 @@ namespace ariel{
             } else {
                 newNode->next = elements.head;
                 elements.tail=elements.head;
-                elements.head->prev=newNode;
                 elements.head = newNode;
+                elements.tail->prev=newNode;
             }
             ++contSize;
-            return;
         }
         else{ // if the container's size is 2 or more
             // if the element is already in the container - it won't be inserted
@@ -83,9 +82,9 @@ namespace ariel{
         // building the crossOrder by taking one from the beginning and one from the end.
         updateSideCross();
 
-        std::cout<<this->elements.tail->value<<","<<this->contSize<<endl;
-        std::cout<<(*primeElements.begin())->value<<","<<this->primeElements.size()<<endl;
-        std::cout<<(*sideCrossElements.begin())->value<<","<<this->sideCrossElements.size()<<endl;
+//        std::cout<<this->elements.tail->value<<","<<this->contSize<<endl;
+//        std::cout<<(*primeElements.begin())->value<<","<<this->primeElements.size()<<endl;
+//        std::cout<<(*sideCrossElements.begin())->value<<","<<this->sideCrossElements.size()<<endl;
     }
 
     void MagicalContainer::removeElement(int toDelete) {
@@ -118,14 +117,14 @@ namespace ariel{
     }
 
     bool MagicalContainer::isPrime(int num) {
-        cout<<num<<" is prime???"<<endl;
         if (num < 2)
             return false;
+//        if (num == 2)
+//            return true;
         for (int i = 2; i < num; ++i) {
             if (num % i == 0)
                 return false;
         }
-        cout<<num<<" is prime!!"<<endl;
         return true;
     }
 
@@ -147,18 +146,34 @@ namespace ariel{
         sideCrossElements.clear();
         Node* start = this->elements.head;
         Node* end = this->elements.tail;
+        if(this->contSize == 0)
+            return;
+        int count = 0;
+        while (count < this->size()){
+            if(count%2 == 0){
+                sideCrossElements.push_back(start);
+                start = start->next;
+//                cout << "number " << sideCrossElements[static_cast<unsigned long>(count - 1)]->value << endl;
+            }
+            else{
+                sideCrossElements.push_back(end);
+                end = end->prev;
+//                cout << "number " << sideCrossElements[static_cast<unsigned long>(count - 1)]->value << endl;
+            }
+            ++count;
+        }
 
-        // If it's odd size - we will add the first, and then we will run even number of nodes
-        if(this->size() % 2 == 1) {
-            sideCrossElements.insert(sideCrossElements.begin(), this->elements.head);
-            start = start->next;
-        }
-        for (int i = 0; i < floor(this->size() / 2); ++i) {
-            sideCrossElements.push_back(start);
-            sideCrossElements.push_back(end);
-            start = start->next;
-            end = end->prev;
-        }
+//        // If it's odd size - we will add the first, and then we will run even number of nodes
+//        if(this->size() % 2 == 1) {
+//            sideCrossElements.insert(sideCrossElements.begin(), this->elements.head);
+//            start = start->next;
+//        }
+//        for (int i = 0; i < floor(this->size() / 2); ++i) {
+//            sideCrossElements.push_back(start);
+//            sideCrossElements.push_back(end);
+//            start = start->next;
+//            end = end->prev;
+//        }
     }
 
 
@@ -225,14 +240,14 @@ namespace ariel{
         return this->index < other.index;
     }
     int MagicalContainer::SideCrossIterator::operator*() const{
-        int val = this->container.sideCrossElements[this->index]->value;
+        int val = this->container->sideCrossElements[this->index]->value;
         return val;
     }
     Node* MagicalContainer::SideCrossIterator::operator[](size_t ind) const{
-        if(ind > this->container.size())
+        if(ind > this->container->size())
             throw runtime_error("Invalid index");
 
-        Node* curr = container.sideCrossElements.at(ind);
+        Node* curr = container->sideCrossElements.at(ind);
         return curr;
     }
     MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::operator++(){
@@ -244,13 +259,13 @@ namespace ariel{
         return *this;
     }
     MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() const{
-        MagicalContainer::SideCrossIterator sci(container);
+        MagicalContainer::SideCrossIterator sci(*container);
         return sci;
     }
 
     MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() const{
         MagicalContainer::SideCrossIterator sic =
-                SideCrossIterator(container,this->container.primeElements.size());
+                SideCrossIterator(*container, static_cast<size_t>(this->container->size()));
         return sic;
 
     }
@@ -277,18 +292,18 @@ namespace ariel{
         return this->index < other.index;
     }
     int MagicalContainer::PrimeIterator::operator*() const{
-        int val = this->container.primeElements[this->index]->value;
+        int val = this->container->primeElements[this->index]->value;
         return val;
     }
     Node* MagicalContainer::PrimeIterator::operator[](size_t ind) const{
-        if(ind > this->container.size())
+        if(ind > this->container->size())
             throw runtime_error("Invalid index");
 
-        Node* curr = container.primeElements.at(ind);
+        Node* curr = container->primeElements.at(ind);
         return curr;
     }
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::operator++(){
-        if (index == this->container.size()) {
+        if (index == this->container->size()) {
             return *this;
 //            throw runtime_error ("Exceeded container's size");
         }
@@ -297,11 +312,11 @@ namespace ariel{
 
     }
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() const{
-        return PrimeIterator(container);
+        return PrimeIterator(*container);
     }
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() const{
         MagicalContainer::PrimeIterator pri =
-                PrimeIterator(container,this->container.primeElements.size());
+                PrimeIterator(*container,this->container->primeElements.size());
         return pri;
 
     }

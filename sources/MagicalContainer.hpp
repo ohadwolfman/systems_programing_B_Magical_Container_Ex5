@@ -68,12 +68,12 @@ namespace ariel {
         // ---------------------- Class: SideCrossIterator ----------------------
         class SideCrossIterator{
             private:
-                MagicalContainer& container;
+                MagicalContainer* container;
                 size_t index;
 
             public:
                 // Constructors
-                explicit SideCrossIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                explicit SideCrossIterator(MagicalContainer& container, size_t index = 0): container(&container),index(index){}
                 SideCrossIterator(const SideCrossIterator& other) = default;
                 ~SideCrossIterator() = default;
 
@@ -94,12 +94,12 @@ namespace ariel {
         // ---------------------- Class: PrimeIterator ----------------------
         class PrimeIterator{
             private:
-                MagicalContainer& container;
+                MagicalContainer* container;
                 size_t index;
 
             public:
                 // Constructors
-                explicit PrimeIterator(MagicalContainer& container, size_t index = 0): container(container),index(index){}
+                PrimeIterator(MagicalContainer& container, size_t index = 0): container(&container),index(index){}
                 PrimeIterator(const PrimeIterator& other) = default;
                 ~PrimeIterator() = default;
 

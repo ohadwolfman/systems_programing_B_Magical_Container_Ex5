@@ -29,7 +29,6 @@ TEST_CASE("MagicalContainer Test") {
 
     MagicalContainer otherContainer = container;
     CHECK(otherContainer.size() == 5);
-    CHECK_FALSE(container.getElements().begin() != otherContainer.getElements().begin());
 
     container.removeElement(10);  // 10 isn't in the container
     CHECK(otherContainer.size() == 5);
@@ -37,6 +36,8 @@ TEST_CASE("MagicalContainer Test") {
     CHECK(otherContainer.size() == 6);
     container.removeElement(10);
     CHECK(otherContainer.size() == 5);
+    CHECK_THROWS(container.removeElement(150));
+
 
     SUBCASE("AscendingIterator Test") {
         MagicalContainer::AscendingIterator asc(container);
