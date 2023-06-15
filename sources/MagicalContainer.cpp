@@ -1,6 +1,5 @@
 #include "MagicalContainer.hpp"
 #include <iterator>
-#include <cmath>
 #include <algorithm>
 #include <iostream>
 
@@ -62,7 +61,6 @@ namespace ariel{
             addPrime(newNode);
         }
 
-        // Insert to cross order pointers vector for crossOrder iterator
         // building the crossOrder by taking one from the beginning and one from the end.
         updateSideCross();
 
@@ -78,15 +76,15 @@ namespace ariel{
             Node* nextNode = curr->next;  // Store the next node
             if (curr->value == toDelete) {
                 if (curr == elements.head) {
-                    elements.head = curr->next;
+                    elements.head = curr->next; // delete the first - pass the head to the second
                 }
                 if (curr == elements.tail) {
-                    elements.tail = curr->prev;
+                    elements.tail = curr->prev; // delete the last - pass the tail to one before
                 }
-                if (curr->prev != nullptr) {
+                if (curr->prev != nullptr) { // before delete curr set the prev to jump over curr
                     curr->prev->next = curr->next;
                 }
-                if (curr->next != nullptr) {
+                if (curr->next != nullptr) { // before delete curr set the next to jump over curr
                     curr->next->prev = curr->prev;
                 }
                 delete curr;
@@ -103,8 +101,8 @@ namespace ariel{
     bool MagicalContainer::isPrime(int num) {
         if (num < 2)
             return false;
-//        if (num == 2)
-//            return true;
+        if (num == 2)
+            return true;
         for (int i = 2; i < num; ++i) {
             if (num % i == 0)
                 return false;
@@ -146,18 +144,6 @@ namespace ariel{
             }
             ++count;
         }
-
-//        // If it's odd size - we will add the first, and then we will run even number of nodes
-//        if(this->size() % 2 == 1) {
-//            sideCrossElements.insert(sideCrossElements.begin(), this->elements.head);
-//            start = start->next;
-//        }
-//        for (int i = 0; i < floor(this->size() / 2); ++i) {
-//            sideCrossElements.push_back(start);
-//            sideCrossElements.push_back(end);
-//            start = start->next;
-//            end = end->prev;
-//        }
     }
 
 
@@ -296,7 +282,8 @@ namespace ariel{
 
     }
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() const{
-        return PrimeIterator(*container);
+        MagicalContainer::PrimeIterator pri =PrimeIterator(*container,0);
+        return pri;
     }
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() const{
         MagicalContainer::PrimeIterator pri =
