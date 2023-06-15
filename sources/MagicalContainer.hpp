@@ -30,9 +30,18 @@ namespace ariel {
         int contSize;
 
     public:
-        MagicalContainer(): elements(nullptr),contSize(0){}
-//        MagicalContainer(const MagicalContainer& other);
-        ~MagicalContainer() = default;
+        explicit MagicalContainer() : elements(nullptr), contSize(0) {}
+        MagicalContainer(const MagicalContainer& other):
+            elements(other.elements), primeElements(other.primeElements),
+            sideCrossElements(other.sideCrossElements), contSize(other.contSize) {}
+        // Destructor
+        ~MagicalContainer() {
+            for (Node* node : primeElements) {
+                delete node;
+            }
+            primeElements.clear();
+            sideCrossElements.clear();
+        }
         void addElement(int newElement);
         void removeElement(int toDelete);
         static bool isPrime(int num);

@@ -7,22 +7,6 @@
 using namespace std;
 
 namespace ariel{
-//    MagicalContainer::MagicalContainer(const MagicalContainer& other){
-//        contSize=other.contSize;
-//        elements = *new LinkedList(other.elements);
-//        primeElements = other.primeElements;
-//        sideCrossElements = other.sideCrossElements;
-//    }
-//    MagicalContainer::~MagicalContainer() {
-//        for (int* ptr : primeElements) {
-//            delete ptr;
-//        }
-//        primeElements.clear(); // Clear the vector after deleting the pointers
-//
-//        // There is no need to delete elements in sideCrossElements since they are not dynamically allocated
-//        sideCrossElements.clear(); // Clear the vector
-//    }
-
     void MagicalContainer::addElement(int newElement) {
         // Create a new node for the new element
         Node* newNode = new Node(newElement);
