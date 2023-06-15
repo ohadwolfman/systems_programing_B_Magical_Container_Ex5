@@ -26,7 +26,6 @@ namespace ariel{
     void MagicalContainer::addElement(int newElement) {
         // Create a new node for the new element
         Node* newNode = new Node(newElement);
-        Node* curr = elements.head;
         // Insert in the sorted place in the vector for ascending iterator
 
         // if elements size is 0
@@ -36,11 +35,11 @@ namespace ariel{
             ++contSize;
         }
         // if elements size is 1
-        else if (curr->next == nullptr) {
+        else if (elements.head->next == nullptr) {
             if (elements.head->value < newNode->value) {
                 elements.head->next = newNode;
-                elements.tail=newNode;
                 newNode->prev = elements.head;
+                elements.tail=newNode;
             } else {
                 newNode->next = elements.head;
                 elements.tail=elements.head;
@@ -52,6 +51,7 @@ namespace ariel{
         }
         else{ // if the container's size is 2 or more
             // if the element is already in the container - it won't be inserted
+            Node* curr = elements.head;
             while(curr->next != nullptr && curr->next->value <= newNode->value){
                 if(curr->next->value == newNode->value)
                     return;
@@ -76,17 +76,16 @@ namespace ariel{
 
         // Insert if prime number for prime iterator
         if (isPrime(newElement)) {
-            std::cout<<newNode->value<<"is prime!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
-            addPrime((Node &) newNode);
+            addPrime(newNode);
         }
 
         // Insert to cross order pointers vector for crossOrder iterator
         // building the crossOrder by taking one from the beginning and one from the end.
         updateSideCross();
 
-//        std::cout<<elements.size()<<endl;
-//        std::cout<<primeElements.size()<<endl;
-//        std::cout<<sideCrossElements.size()<<endl;
+        std::cout<<this->elements.tail->value<<","<<this->contSize<<endl;
+        std::cout<<(*primeElements.begin())->value<<","<<this->primeElements.size()<<endl;
+        std::cout<<(*sideCrossElements.begin())->value<<","<<this->sideCrossElements.size()<<endl;
     }
 
     void MagicalContainer::removeElement(int toDelete) {
@@ -118,29 +117,29 @@ namespace ariel{
         }
     }
 
-
-
     bool MagicalContainer::isPrime(int num) {
+        cout<<num<<" is prime???"<<endl;
         if (num < 2)
             return false;
-        for (int i = 2; i <= num; ++i) {
+        for (int i = 2; i < num; ++i) {
             if (num % i == 0)
                 return false;
         }
+        cout<<num<<" is prime!!"<<endl;
         return true;
     }
 
-    void MagicalContainer::addPrime(Node newNode){
+    void MagicalContainer::addPrime(Node* newNode){
         // Find the correct position to insert the prime node in ascending order
         if(primeElements.empty()){
-            primeElements.push_back(&newNode);
+            primeElements.push_back(newNode);
             return;
         }
-        int i = 0;
-        while(primeElements[static_cast<unsigned long>(i)]->value < newNode.value){
+        size_t i = 0;
+        while(primeElements[i]->value < newNode->value){
             ++i;
         }
-        primeElements.insert(primeElements.begin() + i,&newNode);
+        primeElements.insert(primeElements.begin() + static_cast<long>(i), newNode);
     }
 
     void MagicalContainer::updateSideCross(){
@@ -155,8 +154,8 @@ namespace ariel{
             start = start->next;
         }
         for (int i = 0; i < floor(this->size() / 2); ++i) {
-            sideCrossElements.insert(sideCrossElements.begin()+i, start);
-            sideCrossElements.insert(sideCrossElements.end()-i, end);
+            sideCrossElements.push_back(start);
+            sideCrossElements.push_back(end);
             start = start->next;
             end = end->prev;
         }
@@ -226,7 +225,8 @@ namespace ariel{
         return this->index < other.index;
     }
     int MagicalContainer::SideCrossIterator::operator*() const{
-        return this->container.sideCrossElements[this->index]->value;
+        int val = this->container.sideCrossElements[this->index]->value;
+        return val;
     }
     Node* MagicalContainer::SideCrossIterator::operator[](size_t ind) const{
         if(ind > this->container.size())
@@ -235,12 +235,12 @@ namespace ariel{
         Node* curr = container.sideCrossElements.at(ind);
         return curr;
     }
-    MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++(){
+    MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::operator++(){
         if (*this == end())
         {
             throw std::runtime_error("Exceeded container's size");
         }
-        ++index;
+        ++this->index;
         return *this;
     }
     MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() const{
@@ -277,7 +277,8 @@ namespace ariel{
         return this->index < other.index;
     }
     int MagicalContainer::PrimeIterator::operator*() const{
-        return this->container.primeElements[this->index]->value;
+        int val = this->container.primeElements[this->index]->value;
+        return val;
     }
     Node* MagicalContainer::PrimeIterator::operator[](size_t ind) const{
         if(ind > this->container.size())
@@ -286,7 +287,7 @@ namespace ariel{
         Node* curr = container.primeElements.at(ind);
         return curr;
     }
-    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++(){
+    MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::operator++(){
         if (index == this->container.size()) {
             return *this;
 //            throw runtime_error ("Exceeded container's size");

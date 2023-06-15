@@ -36,7 +36,7 @@ namespace ariel {
         void addElement(int newElement);
         void removeElement(int toDelete);
         static bool isPrime(int num);
-        void addPrime(Node newNode);
+        void addPrime(Node* newNode);
         void updateSideCross();
         int size() const{ return this->contSize; }
 
@@ -85,7 +85,7 @@ namespace ariel {
                 bool operator<(const SideCrossIterator& other) const;
                 int operator*() const;
                 Node* operator[](size_t index) const;
-                SideCrossIterator& operator++();
+                SideCrossIterator operator++();
                 SideCrossIterator begin() const;
                 SideCrossIterator end() const;
         };
@@ -111,7 +111,7 @@ namespace ariel {
                 bool operator<(const PrimeIterator& other) const;
                 int operator*() const;
                 Node* operator[](size_t index) const;
-                PrimeIterator& operator++();
+                PrimeIterator operator++();
                 PrimeIterator begin() const;
                 PrimeIterator end() const;
         };
