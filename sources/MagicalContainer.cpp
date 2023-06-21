@@ -9,65 +9,59 @@ namespace ariel{
     void MagicalContainer::addElement(int newElement) {
         // Create a new node for the new element
         Node* newNode = new Node(newElement);
-        // Insert in the sorted place in the vector for ascending iterator
 
-        // if elements size is 0
+        // Check if the element already exists in the container
+        Node* curr = elements.head;
+        while (curr != nullptr) {
+            if (curr->value == newElement) {
+                delete newNode; // Element already exists, so delete the newly created node
+                return;
+            }
+            curr = curr->next;
+        }
+
+        // Insert in the sorted place in the container for ascending iterator
+
+        // If the container is empty
         if (elements.head == nullptr) {
             elements.head = newNode;
-            elements.tail=newNode;
-            ++contSize;
+            elements.tail = newNode;
         }
-        // if elements size is 1
-        else if (elements.head->next == nullptr) {
-            if (elements.head->value < newNode->value) {
-                elements.head->next = newNode;
-                newNode->prev = elements.head;
-                elements.tail=newNode;
-            } else {
-                newNode->next = elements.head;
-                elements.tail=elements.head;
-                elements.head = newNode;
-                elements.tail->prev=newNode;
-            }
-            ++contSize;
+            // If the new element should be inserted at the beginning
+        else if (newNode->value <= elements.head->value) {
+            newNode->next = elements.head;
+            elements.head->prev = newNode;
+            elements.head = newNode;
         }
-        else{ // if the container's size is 2 or more
-            // if the element is already in the container - it won't be inserted
-            Node* curr = elements.head;
-            while(curr->next != nullptr && curr->next->value <= newNode->value){
-                if(curr->next->value == newNode->value)
-                    return;
-                curr = curr->next;
-            }
-            if(curr->value < newNode->value){
-                if(curr->next == nullptr){
-                    curr->next=newNode;
-                    elements.tail=newNode;
-                    newNode->prev=curr;
-                    this->elements.tail=newNode;
-                }
-                else{
-                    newNode->next=curr->next;
-                    curr->next->prev=newNode;
-                    newNode->prev=curr;
-                    curr->next=newNode;
-                }
-            }
-            ++contSize;
+            // If the new element should be inserted at the end
+        else if (newNode->value >= elements.tail->value) {
+            elements.tail->next = newNode;
+            newNode->prev = elements.tail;
+            elements.tail = newNode;
         }
+            // If the new element should be inserted in the middle
+        else {
+            Node* current = elements.head->next;
+            while (current != nullptr && newNode->value > current->value) {
+                current = current->next;
+            }
+            newNode->next = current;
+            newNode->prev = current->prev;
+            current->prev->next = newNode;
+            current->prev = newNode;
+        }
+
+        ++contSize;
 
         // Insert if prime number for prime iterator
         if (isPrime(newElement)) {
             addPrime(newNode);
         }
 
-        // building the crossOrder by taking one from the beginning and one from the end.
+        // Building the crossOrder by taking one from the beginning and one from the end.
         updateSideCross();
-
-//        std::cout<<this->elements.tail->value<<","<<this->contSize<<endl;
-//        std::cout<<(*primeElements.begin())->value<<","<<this->primeElements.size()<<endl;
-//        std::cout<<(*sideCrossElements.begin())->value<<","<<this->sideCrossElements.size()<<endl;
     }
+
 
     void MagicalContainer::removeElement(int toDelete) {
         bool flag = false;
@@ -110,18 +104,24 @@ namespace ariel{
         return true;
     }
 
-    void MagicalContainer::addPrime(Node* newNode){
+    void MagicalContainer::addPrime(Node* newNode) {
         // Find the correct position to insert the prime node in ascending order
-        if(primeElements.empty()){
+        if (primeElements.empty()) {
             primeElements.push_back(newNode);
             return;
         }
         size_t i = 0;
-        while(primeElements[i]->value < newNode->value){
-            ++i;
+        while (i < primeElements.size() - 1 && primeElements[i]->value < newNode->value) {
+            if (primeElements[i]) {
+                ++i;
+            } else {
+                primeElements.push_back(newNode);
+                return;
+            }
         }
         primeElements.insert(primeElements.begin() + static_cast<long>(i), newNode);
     }
+
 
     void MagicalContainer::updateSideCross(){
         // clear the vector because every addition the container changes.
@@ -171,7 +171,7 @@ namespace ariel{
         return this->container.elements[this->index]->value;
     }
     MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator++(){
-        if (index == this->container.size()) {
+        if (index >= this->container.size()) {
             return *this;
 //            throw runtime_error ("Exceeded container's size");
         }
@@ -221,9 +221,10 @@ namespace ariel{
         return curr;
     }
     MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::operator++(){
-        if (*this == end())
+        if (index >= this->container->size())
         {
             throw std::runtime_error("Exceeded container's size");
+//            return *this;
         }
         ++this->index;
         return *this;
@@ -272,14 +273,13 @@ namespace ariel{
         Node* curr = container->primeElements.at(ind);
         return curr;
     }
-    MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::operator++(){
-        if (index == this->container->size()) {
-            return *this;
-//            throw runtime_error ("Exceeded container's size");
+    MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::operator++() {
+        if (index >= this->container->primeElements.size()) {
+            throw std::runtime_error("Iterator reached the end of the container");
+//            return *this;
         }
         ++index;
         return *this;
-
     }
     MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() const{
         MagicalContainer::PrimeIterator pri =PrimeIterator(*container,0);

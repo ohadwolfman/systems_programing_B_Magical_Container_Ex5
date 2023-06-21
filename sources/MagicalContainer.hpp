@@ -1,6 +1,7 @@
 #ifndef CPP_EX5_MAGICALCONTAINER_HPP
 #define CPP_EX5_MAGICALCONTAINER_HPP
 #include <vector>
+#include <iostream>
 using namespace std;
 
 namespace ariel {
@@ -30,7 +31,7 @@ namespace ariel {
         int contSize;
 
     public:
-        explicit MagicalContainer() : elements(nullptr), contSize(0) {}
+        explicit MagicalContainer() : elements(nullptr), primeElements(), sideCrossElements(), contSize(0) {}
         MagicalContainer(const MagicalContainer& other):
             elements(other.elements), primeElements(other.primeElements),
             sideCrossElements(other.sideCrossElements), contSize(other.contSize) {}
@@ -108,7 +109,8 @@ namespace ariel {
 
             public:
                 // Constructors
-                PrimeIterator(MagicalContainer& container, size_t index = 0): container(&container),index(index){}
+                explicit PrimeIterator(MagicalContainer& container): container(&container),index(0){}
+                PrimeIterator(MagicalContainer& container, size_t index): container(&container),index(index){}
                 PrimeIterator(const PrimeIterator& other) = default;
                 ~PrimeIterator() = default;
 
